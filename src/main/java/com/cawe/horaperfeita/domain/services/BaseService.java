@@ -1,11 +1,12 @@
-package com.cawe.horaperfeita.application.services;
+package com.cawe.horaperfeita.domain.services;
 
+import com.cawe.horaperfeita.domain.interfaces.IBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public abstract class BaseService<BaseEntity> {
+public abstract class BaseService<BaseEntity> implements IBaseService {
 
     public JpaRepository<BaseEntity, Long> repository;
 
