@@ -1,4 +1,4 @@
-package com.cawe.horaperfeita.domain.interfaces;
+package com.cawe.horaperfeita.domain.interfaces.services;
 
 import java.util.List;
 

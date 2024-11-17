@@ -1,6 +1,6 @@
 package com.cawe.horaperfeita.domain.services;
 
-import com.cawe.horaperfeita.domain.interfaces.IBaseService;
+import com.cawe.horaperfeita.domain.interfaces.services.IBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
