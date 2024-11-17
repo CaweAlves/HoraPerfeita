@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public abstract class BaseService<BaseEntity> implements IBaseService {
+public abstract class BaseService<BaseEntity> {
 
     public JpaRepository<BaseEntity, Long> repository;
 
@@ -19,23 +19,23 @@ public abstract class BaseService<BaseEntity> implements IBaseService {
         this.repository = repository;
     }
 
-    public BaseEntity buscarPorId(Long id) {
+    public BaseEntity findById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public List<BaseEntity> buscarTodos() {
+    public List<BaseEntity> findAll() {
         return repository.findAll();
     }
 
-    public BaseEntity criar(BaseEntity entity) {
+    public BaseEntity create(BaseEntity entity) {
         return repository.save(entity);
     }
 
-    public BaseEntity atualizar(BaseEntity entity) {
+    public BaseEntity update(BaseEntity entity) {
         return repository.save(entity);
     }
 
-    public void remover(Long id) {
+    public void remove(Long id) {
         repository.deleteById(id);
     }
 
