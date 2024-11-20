@@ -37,8 +37,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
         try {
-            User user = this.userService.create(request);
-            return new ResponseEntity(user, HttpStatus.CREATED);
+            return new ResponseEntity(this.userService.create(request), HttpStatus.CREATED);
         } catch (ResponseStatusException exception) {
             return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
         }
