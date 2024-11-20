@@ -1,9 +1,11 @@
 package com.cawe.horaperfeita.domain.services;
 
+import com.cawe.horaperfeita.application.dtos.user.LoginUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.RegisterUserDTO;
-import com.cawe.horaperfeita.domain.entities.BaseEntity;
+import com.cawe.horaperfeita.application.dtos.user.ResponseUserTokenDTO;
 import com.cawe.horaperfeita.domain.entities.User;
 import com.cawe.horaperfeita.domain.repositories.UserRepository;
+import com.cawe.horaperfeita.infrastructure.config.security.TokenService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -18,10 +20,12 @@ import java.util.Optional;
 public class UserService extends BaseService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     @Autowired
     @Lazy
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+        this.tokenService = tokenService;
         super.setRepository(userRepository);
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -42,5 +46,16 @@ public class UserService extends BaseService<User> {
         user.setPassword(this.passwordEncoder.encode(userDTO.password()));
 
         return this.create(user);
+    }
+
+    public ResponseUserTokenDTO login(LoginUserDTO request) throws ResponseStatusException {
+        User user = this.userRepository.findByUsername(request.username()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User credentials do not match"));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User credentials do not match");
+        }
+        String token = this.tokenService.generateToken(user);
+
+        return new ResponseUserTokenDTO(user.getUsername(), token);
     }
 }

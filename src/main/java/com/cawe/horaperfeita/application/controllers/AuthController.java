@@ -1,6 +1,8 @@
 package com.cawe.horaperfeita.application.controllers;
 
+import com.cawe.horaperfeita.application.dtos.user.LoginUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.RegisterUserDTO;
+import com.cawe.horaperfeita.application.dtos.user.ResponseUserTokenDTO;
 import com.cawe.horaperfeita.domain.entities.User;
 import com.cawe.horaperfeita.domain.services.UserService;
 import jakarta.validation.Valid;
@@ -22,6 +24,10 @@ public class AuthController {
     @Autowired
     UserService userService;
 
+    @PostMapping("/login")
+    public ResponseEntity<ResponseUserTokenDTO> login(@Valid @RequestBody LoginUserDTO request) {
+        return ResponseEntity.ok(this.userService.login(request));
+    }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
