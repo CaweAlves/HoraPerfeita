@@ -4,6 +4,7 @@ import com.cawe.horaperfeita.application.dtos.user.LoginUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.RegisterUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.ResponseUserTokenDTO;
 import com.cawe.horaperfeita.domain.entities.User;
+import com.cawe.horaperfeita.domain.services.AuthService;
 import com.cawe.horaperfeita.domain.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthController {
 
     @Autowired
-    UserService userService;
+    AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseUserTokenDTO> login(@Valid @RequestBody LoginUserDTO request) throws ResponseStatusException {
         try {
-            return ResponseEntity.ok(this.userService.login(request));
+            return ResponseEntity.ok(this.authService.login(request));
         } catch (ResponseStatusException exception) {
             return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
         }
@@ -37,7 +38,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
         try {
-            return new ResponseEntity(this.userService.create(request), HttpStatus.CREATED);
+            return new ResponseEntity(this.authService.create(request), HttpStatus.CREATED);
         } catch (ResponseStatusException exception) {
             return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
         }
