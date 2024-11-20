@@ -9,14 +9,12 @@ public class WeatherService {
 
     private final OpenMeteor openMeteor;
 
-    @Autowired
-    public WeatherService(OpenMeteor openMeteor) {
-        this.openMeteor = openMeteor;
+    public WeatherService() {
+        this.openMeteor = new OpenMeteor();
     }
 
     public String getSevenDaysForecast(String latitude, String longitude) {
-        OpenMeteor forecast = new OpenMeteor();
-        forecast.addTemperature();
-        return forecast.getWeatherForecastForSevenDays(latitude, longitude);
+        this.openMeteor.addTemperature();
+        return this.openMeteor.getWeatherForecastForSevenDays(latitude, longitude);
     }
 }
