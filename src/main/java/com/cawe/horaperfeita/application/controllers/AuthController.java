@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,8 +24,13 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) {
-        return new ResponseEntity(this.userService.create(request), HttpStatus.CREATED);
-    }
+    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
+        try {
+            User user = this.userService.create(request);
+            return new ResponseEntity(user, HttpStatus.CREATED);
+        } catch (ResponseStatusException exception) {
+            return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
+        }
 
+    }
 }
