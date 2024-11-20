@@ -103,4 +103,33 @@ class AuthControllerTest {
                         .value(loginRequest.username()))
                 .andExpect(jsonPath("$.token").exists());
     }
+
+    @Test
+    @DisplayName("should make sure to inform the user of an error when user credentials do not match")
+    public void shouldMakeSureToInformTheUserOfAnErrorWhenUserCredentialsDoNotMatch() throws Exception {
+        RegisterUserDTO registerRequest = new RegisterUserDTO("Cawe", "cawe.alves", "contato@cawe.dev", "password");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(registerRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name")
+                        .value(registerRequest.name()))
+                .andExpect(jsonPath("$.username")
+                        .value(registerRequest.username()))
+                .andExpect(jsonPath("$.email")
+                        .value(registerRequest.email()));
+
+        LoginUserDTO loginRequest = new LoginUserDTO("cawe.alves", "incorrectPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(loginRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$")
+                        .value("401 UNAUTHORIZED \"User credentials do not match\""));
+    }
 }

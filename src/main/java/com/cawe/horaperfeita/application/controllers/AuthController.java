@@ -25,8 +25,13 @@ public class AuthController {
     UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseUserTokenDTO> login(@Valid @RequestBody LoginUserDTO request) {
-        return ResponseEntity.ok(this.userService.login(request));
+    public ResponseEntity<ResponseUserTokenDTO> login(@Valid @RequestBody LoginUserDTO request) throws ResponseStatusException {
+        try {
+            return ResponseEntity.ok(this.userService.login(request));
+        } catch (ResponseStatusException exception) {
+            return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
+        }
+
     }
 
     @PostMapping("/register")
