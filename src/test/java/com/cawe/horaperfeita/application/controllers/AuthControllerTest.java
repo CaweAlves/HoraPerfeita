@@ -28,8 +28,6 @@ class AuthControllerTest {
     public void shouldBeAbleToRegisterANewUserInTheApplication() throws Exception {
         RegisterUserDTO request = new RegisterUserDTO("Cawe", "cawe.alves", "contato@cawe.dev", "password");
 
-        String url = "/auth/register";
-
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -46,10 +44,8 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("should make sure to inform the user of an error when the user already exists")
-    public void shouldMakeSureToInformeTheUserOfAnErrorWhenTheUserAlreadyExists() throws Exception {
+    public void shouldMakeSureToInformTheUserOfAnErrorWhenTheUserAlreadyExists() throws Exception {
         RegisterUserDTO request = new RegisterUserDTO("Cawe", "cawe.alves", "contato@cawe.dev", "password");
-
-        String url = "/auth/register";
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/auth/register")
