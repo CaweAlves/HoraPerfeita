@@ -3,9 +3,7 @@ package com.cawe.horaperfeita.application.controllers;
 import com.cawe.horaperfeita.application.dtos.user.LoginUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.RegisterUserDTO;
 import com.cawe.horaperfeita.application.dtos.user.ResponseUserTokenDTO;
-import com.cawe.horaperfeita.domain.entities.User;
 import com.cawe.horaperfeita.domain.services.AuthService;
-import com.cawe.horaperfeita.domain.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +34,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
+    public ResponseEntity<ResponseUserTokenDTO> register(@Valid @RequestBody RegisterUserDTO request) throws ResponseStatusException {
         try {
-            return new ResponseEntity(this.authService.create(request), HttpStatus.CREATED);
+            String username = request.username();
+            String token = this.authService.create(request);
+            return new ResponseEntity(new ResponseUserTokenDTO(username, token), HttpStatus.CREATED);
         } catch (ResponseStatusException exception) {
             return new ResponseEntity(exception.getMessage(), exception.getStatusCode());
         }

@@ -36,7 +36,7 @@ public class AuthService extends BaseService<User> {
         super.setRepository(this.userRepository);
     }
 
-    public User create(RegisterUserDTO userDTO) throws ResponseStatusException {
+    public String create(RegisterUserDTO userDTO) throws ResponseStatusException {
         if (this.userService.findByUsername(userDTO.username()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
         }
@@ -45,8 +45,9 @@ public class AuthService extends BaseService<User> {
 
         BeanUtils.copyProperties(userDTO, user);
         user.setPassword(this.passwordEncoder.encode(userDTO.password()));
-
-        return this.create(user);
+        this.create(user);
+        String token = tokenService.generateToken(user);
+        return token;
     }
 
     public ResponseUserTokenDTO login(LoginUserDTO request) throws ResponseStatusException {
