@@ -1,34 +1,34 @@
 version: '3.9'
 services:
-  postgres:
-    image: postgres:17
-    container_name: postgres_horaperfeita
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
+  mysql:
+    image: mysql:8.0
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - horaperfeita_network
-
+      - mysql_data:/var/lib/mysql
+    restart: always
+    ports:
+      - 3310:3306/tcp
+    expose:
+      - 3310
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: horaperfeita
+      MYSQL_USER: horaperfeita
+      MYSQL_PASSWORD: horaperfeita
   horaperfeita_app:
     image: horaperfeita:dev
     container_name: horaperfeita_app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/horaperfeita
+      SPRING_DATASOURCE_USERNAME: horaperfeita
+      SPRING_DATASOURCE_PASSWORD: horaperfeita
     ports:
       - "9901:8080"
     depends_on:
-      - postgres
+      - mysql
     networks:
-        - horaperfeita_network
+      - horaperfeita_network
 volumes:
-  postgres_data:
+  mysql_data:
 
 networks:
   horaperfeita_network:
