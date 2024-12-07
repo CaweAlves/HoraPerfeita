@@ -1,6 +1,10 @@
 package com.cawe.horaperfeita.infrastructure.external.client.openMeteor;
 
+import com.cawe.horaperfeita.infrastructure.external.data.WeatherData;
 import com.cawe.horaperfeita.infrastructure.external.interfaces.IForecast;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -21,8 +25,8 @@ public class OpenMeteor implements IForecast {
         this.urlWithParams = UriComponentsBuilder.fromHttpUrl(baseUrl);
     }
 
-    public String getWeatherForecast() {
-        return restTemplate.getForObject(this.urlWithParams.toUriString(), String.class);
+    public WeatherData getWeatherForecast() {
+        return this.toWeatherData(restTemplate.getForObject(this.urlWithParams.toUriString(), String.class));
     }
 
     public OpenMeteor addTemperature() {
@@ -39,6 +43,18 @@ public class OpenMeteor implements IForecast {
         this.urlWithParams.queryParam("latitude", latitude);
         this.urlWithParams.queryParam("longitude", longitude);
         return this;
+    }
+
+    private WeatherData toWeatherData(String weatherForecast) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            WeatherData weatherData = objectMapper.readValue(weatherForecast, WeatherData.class);
+            return weatherData;
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

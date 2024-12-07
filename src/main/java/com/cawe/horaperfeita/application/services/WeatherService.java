@@ -19,20 +19,8 @@ public class WeatherService {
     public WeatherData getSevenDaysForecast(String latitude, String longitude) {
         forecast.addTemperature();
         forecast.addLatitudeAndLongitude(latitude, longitude);
-        String weatherForecast = this.forecast.getWeatherForecast();
-        return this.toWeatherData(weatherForecast);
-    }
+        return forecast.getWeatherForecast();
 
-    private WeatherData toWeatherData(String weatherForecast) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            WeatherData weatherData = objectMapper.readValue(weatherForecast, WeatherData.class);
-            return weatherData;
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
