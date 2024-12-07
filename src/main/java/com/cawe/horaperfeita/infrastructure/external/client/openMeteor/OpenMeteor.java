@@ -4,7 +4,9 @@ import com.cawe.horaperfeita.infrastructure.external.data.WeatherData;
 import com.cawe.horaperfeita.infrastructure.external.interfaces.IForecast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +24,7 @@ public class OpenMeteor implements IForecast {
     @Autowired
     public OpenMeteor(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.urlWithParams = UriComponentsBuilder.fromHttpUrl(baseUrl);
+        this.urlWithParams = UriComponentsBuilder.fromHttpUrl(baseUrl).queryParam("timezone", "America/Sao_Paulo");
     }
 
     public WeatherData getWeatherForecast() {
@@ -48,13 +50,20 @@ public class OpenMeteor implements IForecast {
     private WeatherData toWeatherData(String weatherForecast) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            WeatherData weatherData = objectMapper.readValue(weatherForecast, WeatherData.class);
-            return weatherData;
+            JsonNode jsonNode = objectMapper.readTree(weatherForecast);
+            if (jsonNode.isArray()) {
+                ArrayNode arrayNode = (ArrayNode) jsonNode;
+                if (arrayNode.size() > 0) {
+                    return objectMapper.treeToValue(arrayNode.get(0), WeatherData.class);
+                }
+            } else if (jsonNode.isObject()) {
+                return objectMapper.treeToValue(jsonNode, WeatherData.class);
+            }
+            throw new RuntimeException("Unexpected JSON format");
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
