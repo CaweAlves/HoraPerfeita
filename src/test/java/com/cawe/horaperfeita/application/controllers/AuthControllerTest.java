@@ -34,12 +34,9 @@ class AuthControllerTest {
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name")
-                        .value(request.name()))
                 .andExpect(jsonPath("$.username")
                         .value(request.username()))
-                .andExpect(jsonPath("$.email")
-                        .value(request.email()));
+                .andExpect(jsonPath("$.token").exists());
     }
 
     @Test

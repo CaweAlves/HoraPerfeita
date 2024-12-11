@@ -8,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @MappedSuperclass
@@ -16,10 +18,10 @@ public abstract class BaseEntity {
 
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreatedDate
-    private Long createdDate;
+    private Date createdDate;
 
     @Column(name = "modified_date")
-    private Long modifiedDate;
+    private Date modifiedDate;
 
     @Column(name = "created_by")
     @CreatedBy
