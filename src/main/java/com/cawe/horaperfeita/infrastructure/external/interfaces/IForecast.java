@@ -7,5 +7,8 @@ public interface IForecast {
 
     IForecast addLatitudeAndLongitude(String latitude, String longitude);
 
+    IForecast addTemperatureAndRain();
+
     WeatherData getWeatherForecast();
+
 }

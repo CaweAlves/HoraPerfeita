@@ -23,4 +23,10 @@ public class WeatherController {
         return ResponseEntity.ok(weatherService.getSevenDaysForecast(latitude, longitude));
     }
 
+
+    @GetMapping("/weather/only-temperature")
+    public ResponseEntity getForecastTemperatureForPreviousSevenDays(@Valid @RequestParam String latitude, @Valid @RequestParam String longitude) {
+        return ResponseEntity.ok(weatherService.getTemperatureSevenDaysForecast(latitude, longitude));
+    }
+
 }

@@ -38,5 +38,6 @@ public class WeatherData {
         private List<String> time;
         @JsonProperty("temperature_2m")
         private List<Double> temperature2m;
+        private List<Double> rain;
     }
 }

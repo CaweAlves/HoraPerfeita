@@ -36,7 +36,7 @@ public class OpenMeteor implements IForecast {
         return this;
     }
 
-    public OpenMeteor addTemperatureAndRain() {
+        public OpenMeteor addTemperatureAndRain() {
         this.urlWithParams.queryParam("hourly", "temperature_2m,rain");
         return this;
     }
