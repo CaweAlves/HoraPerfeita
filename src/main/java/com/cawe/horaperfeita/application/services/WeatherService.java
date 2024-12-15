@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -21,20 +22,20 @@ public class WeatherService {
         return this.groupTimeAndTemperatureAndRain(forecast.getWeatherForecast());
     }
 
-    public Map<String, Double> getTemperatureSevenDaysForecast(String latitude, String longitude) {
+    public Map<String, BigDecimal> getTemperatureSevenDaysForecast(String latitude, String longitude) {
         forecast.addTemperature();
         forecast.addLatitudeAndLongitude(latitude, longitude);
         return this.groupTimeAndTemperature(forecast.getWeatherForecast());
     }
 
-    private Map<String, Double> groupTimeAndTemperature(WeatherData weatherForecast) {
+    private Map<String, BigDecimal> groupTimeAndTemperature(WeatherData weatherForecast) {
         List<String> times = weatherForecast.getHourly().getTime();
         List<Double> temperatures = weatherForecast.getHourly().getTemperature2m();
 
-        Map<String, Double> days = new HashMap<>();
+        Map<String, BigDecimal> days = new HashMap<>();
 
         for (Integer count = 0; count < times.stream().count(); count++) {
-            days.put(times.get(count), temperatures.get(count));
+            days.put(times.get(count), BigDecimal.valueOf(temperatures.get(count)));
         }
 
         return days;
