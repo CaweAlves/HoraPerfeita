@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "activity")
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Activity extends BaseEntity {
     @Column(name = "name")
     private String name;
